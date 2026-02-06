@@ -4,8 +4,8 @@ import { CreateVehicleDto, UpdateVehicleDto } from '@stand/shared';
 export class VehiclesModule {
   constructor(private client: StandClient) {}
 
-  async findAll() {
-    const response = await this.client.axios.get('/vehicles');
+  async findAll(params?: { ownerId?: string; type?: string }) {
+    const response = await this.client.axios.get('/vehicles', { params });
     return response.data;
   }
 

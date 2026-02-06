@@ -15,3 +15,11 @@ export const useVehicle = (id: string) => {
     enabled: !!id,
   });
 };
+
+export const useUserVehicles = (ownerId: string) => {
+  return useQuery({
+    queryKey: ['vehicles', 'owner', ownerId],
+    queryFn: () => sdk.vehicles.findAll({ ownerId }),
+    enabled: !!ownerId,
+  });
+};

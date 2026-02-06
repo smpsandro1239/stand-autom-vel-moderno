@@ -8,16 +8,15 @@ export class VehiclesController {
 
   @Post()
   create(@Body() createVehicleDto: CreateVehicleDto) {
-    // Note: ownerId should come from req.user, but for now we simplify
-    return this.vehiclesService.create({
-      ...createVehicleDto,
-      ownerId: 'placeholder-id', // TODO: Get from Auth
-    });
+    return this.vehiclesService.create(createVehicleDto as any);
   }
 
   @Get()
   findAll(@Query() query: any) {
-    return this.vehiclesService.findAll({});
+    const where: any = {};
+    if (query.ownerId) where.ownerId = query.ownerId;
+    if (query.type) where.type = query.type;
+    return this.vehiclesService.findAll({ where });
   }
 
   @Get(':id')
@@ -27,7 +26,7 @@ export class VehiclesController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateVehicleDto: UpdateVehicleDto) {
-    return this.vehiclesService.update(id, updateVehicleDto);
+    return this.vehiclesService.update(id, updateVehicleDto as any);
   }
 
   @Delete(':id')
