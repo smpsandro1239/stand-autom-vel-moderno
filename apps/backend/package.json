@@ -6,7 +6,9 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev"
+    "prisma:migrate": "prisma migrate dev",
+    "test": "jest",
+    "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -30,8 +32,10 @@
     "@nestjs/testing": "^10.4.22",
     "@types/bcrypt": "^6.0.0",
     "@types/jest": "^30.0.0",
+    "@types/supertest": "^6.0.3",
     "jest": "^30.2.0",
     "prisma": "^5.0.0",
+    "supertest": "^7.2.2",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.0.0"
