@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  SELLER
+  USER
+}
+
+enum VehicleStatus {
+  AVAILABLE
+  SOLD
+  RENTED
+  MAINTENANCE
+}
+
+enum RentalStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password      String
+  name          String?
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  vehicles      Vehicle[]
+  rentals       Rental[]
+  leads         Lead[]
+  sessions      Session[]
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  refreshToken String   @unique
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+}
+
+model Vehicle {
+  id            String        @id @default(uuid())
+  make          String
+  model         String
+  year          Int
+  price         Float
+  mileage       Int
+  description   String?
+  status        VehicleStatus @default(AVAILABLE)
+  type          String        // "SALE" or "RENTAL"
+  images        String[]
+  ownerId       String
+  owner         User          @relation(fields: [ownerId], references: [id])
+  rentals       Rental[]
+  leads         Lead[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Rental {
+  id         String       @id @default(uuid())
+  startDate  DateTime
+  endDate    DateTime
+  totalPrice Float
+  status     RentalStatus @default(PENDING)
+  vehicleId  String
+  vehicle    Vehicle      @relation(fields: [vehicleId], references: [id])
+  userId     String
+  user       User         @relation(fields: [userId], references: [id])
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+}
+
+model Lead {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  phone     String?
+  message   String
+  vehicleId String
+  vehicle   Vehicle  @relation(fields: [vehicleId], references: [id])
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
