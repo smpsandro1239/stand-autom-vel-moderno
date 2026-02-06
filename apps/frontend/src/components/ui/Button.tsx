@@ -1,15 +1,20 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { Loader2 } from 'lucide-react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
+  isLoading?: boolean;
 }
 
 export const Button = ({
   className,
   variant = 'primary',
   size = 'md',
+  isLoading,
+  children,
+  disabled,
   ...props
 }: ButtonProps) => {
   const variants = {
@@ -27,13 +32,17 @@ export const Button = ({
 
   return (
     <button
+      disabled={isLoading || disabled}
       className={cn(
-        'rounded-md font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed',
+        'inline-flex items-center justify-center rounded-md font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed',
         variants[variant],
         sizes[size],
         className
       )}
       {...props}
-    />
+    >
+      {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+      {children}
+    </button>
   );
 };
