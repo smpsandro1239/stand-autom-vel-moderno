@@ -3,4 +3,3 @@ dist
 .next
 .env
 *.log
-package-lock.json
