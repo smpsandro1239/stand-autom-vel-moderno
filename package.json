@@ -1,15 +1,14 @@
 {
-  "name": "veiculos-platform",
+  "name": "vehicle-platform",
   "private": true,
-  "version": "1.0.0",
-  "description": "Plataforma de Venda e Aluguer de Veículos",
-  "scripts": {
-    "build": "npm run build --workspaces",
-    "test": "npm run test --workspaces",
-    "dev": "npm run dev --workspaces"
-  },
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "scripts": {
+    "backend:dev": "npm run dev -w apps/backend",
+    "web:dev": "npm run dev -w apps/web",
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces"
+  }
 }

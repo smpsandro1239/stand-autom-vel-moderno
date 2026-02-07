@@ -1,15 +1,14 @@
-name: CI
+name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, staging ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-
     services:
       postgres:
         image: postgres:15
@@ -31,38 +30,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup Node.js
+      - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build Shared Package
-        run: npm run build -w @stand/shared
-
-      - name: Build SDK
-        run: npm run build -w @stand/sdk
-
-      - name: Backend - Prisma Generate
-        run: npm run prisma:generate -w backend
-        env:
-          DATABASE_URL: postgresql://user:password@localhost:5432/stand_db
-
-      - name: Backend - Build
-        run: npm run build -w backend
-
-      - name: Backend - Test
-        run: npm run test -w backend
-        env:
-          DATABASE_URL: postgresql://user:password@localhost:5432/stand_db
-          JWT_SECRET: test_secret
-          REFRESH_TOKEN_SECRET: test_refresh_secret
-
-      - name: Frontend - Build
-        run: npm run build -w frontend
-        env:
-          NEXT_PUBLIC_API_URL: http://localhost:3001
+      - run: npm install
+      - run: npm run build
+      - run: npm test
