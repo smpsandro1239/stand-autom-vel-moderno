@@ -1,19 +1,16 @@
 {
-  "name": "sdk",
+  "name": "@stand/sdk",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
-    "axios": "^1.13.4"
+    "axios": "^1.6.8",
+    "@stand/shared": "file:../shared"
   },
   "devDependencies": {
-    "typescript": "^5.9.3"
+    "typescript": "^5.4.3"
   }
 }

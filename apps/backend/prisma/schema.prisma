@@ -8,23 +8,37 @@ datasource db {
 }
 
 enum Role {
-  USER
   ADMIN
-  MANAGER
+  SELLER
+  USER
+}
+
+enum VehicleStatus {
+  AVAILABLE
+  SOLD
+  RENTED
+  MAINTENANCE
+}
+
+enum RentalStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
-  name      String?
-  role      Role     @default(USER)
-  sessions  Session[]
-  vehicles  Vehicle[] @relation("CreatedBy")
-  rentals   Rental[]
-  leads     Lead[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password      String
+  name          String?
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  vehicles      Vehicle[]
+  rentals       Rental[]
+  leads         Lead[]
+  sessions      Session[]
 }
 
 model Session {
@@ -32,56 +46,52 @@ model Session {
   userId       String
   user         User     @relation(fields: [userId], references: [id])
   refreshToken String   @unique
-  userAgent    String?
-  ipAddress    String?
-  isValid      Boolean  @default(true)
   expiresAt    DateTime
   createdAt    DateTime @default(now())
 }
 
 model Vehicle {
-  id            String   @id @default(uuid())
+  id            String        @id @default(uuid())
   make          String
   model         String
   year          Int
   price         Float
   mileage       Int
-  fuelType      String
-  transmission  String
   description   String?
+  status        VehicleStatus @default(AVAILABLE)
+  type          String        // "SALE" or "RENTAL"
   images        String[]
-  isAvailable   Boolean  @default(true)
-  createdById   String
-  createdBy     User     @relation("CreatedBy", fields: [createdById], references: [id])
+  ownerId       String
+  owner         User          @relation(fields: [ownerId], references: [id])
   rentals       Rental[]
   leads         Lead[]
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 }
 
 model Rental {
-  id        String   @id @default(uuid())
-  vehicleId String
-  vehicle   Vehicle  @relation(fields: [vehicleId], references: [id])
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  startDate DateTime
-  endDate   DateTime
+  id         String       @id @default(uuid())
+  startDate  DateTime
+  endDate    DateTime
   totalPrice Float
-  status    String   @default("PENDING") // PENDING, CONFIRMED, CANCELLED, COMPLETED
-  createdAt DateTime @default(now())
+  status     RentalStatus @default(PENDING)
+  vehicleId  String
+  vehicle    Vehicle      @relation(fields: [vehicleId], references: [id])
+  userId     String
+  user       User         @relation(fields: [userId], references: [id])
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
 }
 
 model Lead {
   id        String   @id @default(uuid())
+  name      String
+  email     String
+  phone     String?
+  message   String
   vehicleId String
   vehicle   Vehicle  @relation(fields: [vehicleId], references: [id])
   userId    String?
   user      User?    @relation(fields: [userId], references: [id])
-  name      String
-  email     String
-  phone     String?
-  message   String?
-  status    String   @default("NEW") // NEW, CONTACTED, CLOSED
   createdAt DateTime @default(now())
 }

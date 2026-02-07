@@ -1,33 +1,36 @@
-import { PrismaClient, Role } from '@prisma/client';
+import { PrismaClient, Role, VehicleStatus } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const password = await bcrypt.hash('password123', 10);
+  const hashedPassword = await bcrypt.hash('password123', 10);
 
+  // Criar Admin
   const admin = await prisma.user.upsert({
     where: { email: 'admin@stand.com' },
     update: {},
     create: {
       email: 'admin@stand.com',
       name: 'Admin Sandro',
-      password,
+      password: hashedPassword,
       role: Role.ADMIN,
     },
   });
 
-  const user = await prisma.user.upsert({
-    where: { email: 'user@stand.com' },
+  // Criar Seller
+  const seller = await prisma.user.upsert({
+    where: { email: 'seller@stand.com' },
     update: {},
     create: {
-      email: 'user@stand.com',
-      name: 'Joao Silva',
-      password,
-      role: Role.USER,
+      email: 'seller@stand.com',
+      name: 'Vendedor Pro',
+      password: hashedPassword,
+      role: Role.SELLER,
     },
   });
 
+  // Criar Veículos
   await prisma.vehicle.create({
     data: {
       make: 'Tesla',
@@ -35,15 +38,30 @@ async function main() {
       year: 2023,
       price: 45000,
       mileage: 0,
-      fuelType: 'ELECTRIC',
-      transmission: 'AUTOMATIC',
-      description: 'Carro elétrico topo de gama.',
-      createdById: admin.id,
-      isAvailable: true,
+      description: 'Elétrico de última geração',
+      status: VehicleStatus.AVAILABLE,
+      type: 'SALE',
+      ownerId: seller.id,
+      images: ['https://example.com/tesla.jpg'],
     },
   });
 
-  console.log('Seed completed!');
+  await prisma.vehicle.create({
+    data: {
+      make: 'BMW',
+      model: 'iX',
+      year: 2022,
+      price: 500,
+      mileage: 5000,
+      description: 'Aluguer diário de luxo',
+      status: VehicleStatus.AVAILABLE,
+      type: 'RENTAL',
+      ownerId: seller.id,
+      images: ['https://example.com/bmw.jpg'],
+    },
+  });
+
+  console.log('Seed completo!');
 }
 
 main()
