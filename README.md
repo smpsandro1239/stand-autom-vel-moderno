@@ -1,96 +1,108 @@
-# 🚗 StandPro - Gestão Premium de Veículos
+# 🚗 StandPro - Plataforma Premium de Gestão de Veículos
 
-![StandPro Logo](https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/car.svg)
+![StandPro Banner](https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/car.svg)
 
-## 🎯 Pitch: A Revolução na Gestão de Stands
-O **StandPro** não é apenas mais um software de gestão de veículos; é uma solução **full-stack premium** desenhada para elevar a eficiência de stands de automóveis e empresas de aluguer.
-
-Num mercado competitivo, a velocidade e a confiança são fundamentais. O StandPro oferece:
-- **Presença Digital Imediata:** Catálogo otimizado para SEO e performance (Next.js 14).
-- **Gestão Centralizada:** Inventário de vendas e alugueres num único dashboard.
-- **Segurança de Nível Bancário:** Autenticação robusta, tokens rotativos e auditoria total de ações.
-- **Escalabilidade:** Arquitetura monorepo que permite crescer do SDK à aplicação mobile sem fricção.
+O **StandPro** é uma solução empresarial full-stack, moderna e escalável, desenhada especificamente para stands de automóveis e empresas de gestão de frotas/aluguer. Combinando uma experiência de utilizador fluida com uma infraestrutura de segurança robusta, o StandPro redefine a forma como os veículos são geridos e apresentados.
 
 ---
 
-## 🛠️ Stack Tecnológica
+## 🔗 Ver Online (Live Demo)
 
-### Monorepo (NPM Workspaces)
-- **Frontend:** [Next.js 14](https://nextjs.org/) (App Router), Tailwind CSS, TanStack Query, Zustand.
-- **Backend:** [NestJS](https://nestjs.com/) (Fastify), Prisma ORM, PostgreSQL, Redis.
-- **SDK:** TypeScript SDK nativo para integração simplificada.
-- **Shared:** Pacote de tipos e validações (Zod) partilhado entre todas as apps.
+Aceda à plataforma em tempo real através dos links abaixo:
 
-### Infraestrutura & Segurança
-- **CI/CD:** GitHub Actions.
-- **Deploy:** Render (Automático).
-- **Segurança:** Helmet, Rate Limiting, RBAC (Role Based Access Control), Audit Logs.
+- **🌐 Frontend (Portal Web):** [https://standpro-frontend.onrender.com](https://standpro-frontend.onrender.com)
+- **⚙️ Backend (API & Docs):** [https://standpro-backend.onrender.com/api/docs](https://standpro-backend.onrender.com/api/docs)
+- **👨‍💻 SDK (NPM Style):** Disponível internamente no repositório em `packages/sdk`.
 
 ---
 
-## 📸 Galeria de Screenshots Completa
+## 🎯 Porquê o StandPro? (The Pitch)
 
-### 🖥️ Experiência Desktop
-| Home | Catálogo | Detalhes do Veículo |
+Num mercado onde a primeira impressão é digital, o StandPro oferece a vantagem competitiva necessária:
+- **Performance Extrema:** Construído sobre Next.js 14 e NestJS, garantindo tempos de carregamento mínimos e SEO otimizado.
+- **Ecossistema Integrado:** Partilha de lógica entre Web, Backend e SDK através de um Monorepo eficiente.
+- **Confiança Total:** Sistema de autenticação com rotação de tokens, auditoria de ações e controlo de acessos baseado em perfis (RBAC).
+- **Gestão Inteligente:** Painel administrativo completo para monitorizar leads de venda e reservas de aluguer.
+
+---
+
+## 🛠️ Stack Tecnológica de Elite
+
+### Frontend (User Experience)
+- **Framework:** [Next.js 14](https://nextjs.org/) (App Router & Server Components).
+- **Estilização:** Tailwind CSS (Responsive Design).
+- **Estado:** TanStack Query (Caching) & Zustand (Global Store).
+- **Componentes:** UI minimalista e acessível.
+
+### Backend (Engine)
+- **Framework:** [NestJS](https://nestjs.com/) com Fastify para máxima produtividade.
+- **ORM:** Prisma para interações seguras com a base de dados.
+- **Base de Dados:** PostgreSQL (Persistência) & Redis (Cache de Sessões).
+- **Segurança:** JWT (Access & Refresh Tokens), Helmet, Rate Limiting e Zod.
+
+### DevSecOps & Infraestrutura
+- **Monorepo:** NPM Workspaces.
+- **CI/CD:** GitHub Actions para testes e deploys automatizados.
+- **Cloud:** Render (PaaS) para alojamento de alta disponibilidade.
+
+---
+
+## 📸 Galeria de Demonstração Visual
+
+### 🖥️ Desktop Experience
+| Home Page | Catálogo de Veículos | Detalhes Técnicos |
 |:---:|:---:|:---:|
 | ![Home](./docs/screenshots/desktop/home.png) | ![Catálogo](./docs/screenshots/desktop/catalog.png) | ![Detalhes](./docs/screenshots/desktop/detail.png) |
 
-| Dashboard | Login | Registo |
+| Dashboard Admin | Autenticação (Login) | Registo de Utilizador |
 |:---:|:---:|:---:|
 | ![Dashboard](./docs/screenshots/desktop/dashboard.png) | ![Login](./docs/screenshots/desktop/login.png) | ![Registo](./docs/screenshots/desktop/register.png) |
 
-### 📱 Experiência Mobile
-| Home | Catálogo | Dashboard |
+### 📱 Mobile Experience
+| Navegação Mobile | Catálogo Mobile | Gestão Mobile |
 |:---:|:---:|:---:|
 | ![Home](./docs/screenshots/mobile/home.png) | ![Catálogo](./docs/screenshots/mobile/catalog.png) | ![Dashboard](./docs/screenshots/mobile/dashboard.png) |
 
 ---
 
-## 📖 Manual do Utilizador
+## 📖 Guia de Utilização
 
-### 1. Navegação e Exploração
-- **Catálogo:** Aceda à página de "Veículos" para explorar todos os carros disponíveis. Utilize os filtros (venda/aluguer) para encontrar o que procura.
-- **Detalhes:** Clique em "Ver Detalhes" para consultar especificações técnicas, quilometragem e preço.
+### Para Clientes (Utilizadores)
+1. **Explorar:** Navegue pelo catálogo e use os filtros para encontrar o carro dos seus sonhos.
+2. **Consultar:** Verifique quilometragem, tipo de combustível e preço nos detalhes.
+3. **Interagir:** Envie uma demonstração de interesse (Lead) ou solicite um aluguer instantâneo.
 
-### 2. Contacto e Interesse
-- Ao encontrar um veículo, os utilizadores podem enviar uma **Lead** de interesse (venda) ou solicitar uma **Reserva** (aluguer).
-
----
-
-## 👨‍💼 Manual do Administrador
-
-### 1. Gestão de Inventário
-- Aceda ao **Dashboard** após fazer login.
-- Utilize o botão "Adicionar Veículo" para inserir novos carros no sistema.
-- Edite ou remova veículos existentes diretamente na sua garagem virtual.
-
-### 2. Monitorização
-- Visualize o número de **Leads Ativas** e **Alugueres Ativos** em tempo real através dos cartões de métricas no topo do dashboard.
+### Para Gestores (Administradores/Vendedores)
+1. **Dashboard:** Monitorize o desempenho do stand e métricas de leads.
+2. **Inventário:** Adicione, edite ou remova veículos com 3 cliques.
+3. **Segurança:** Verifique logs de auditoria para garantir a integridade dos dados.
 
 ---
 
-## 🚀 Como Executar o Projeto
+## 🚀 Como Executar Localmente
 
 ### Pré-requisitos
 - Node.js 20+
-- Docker & Docker Compose
+- Docker (para base de dados e redis local)
 
-### Instalação
-1. Clone o repositório.
-2. Instale as dependências: `npm install`.
-3. Configure o ambiente: `cp .env.example .env`.
-4. Inicie a base de dados: `docker-compose up -d`.
-5. Execute as migrations: `npm run prisma:deploy --workspace=apps/backend`.
-6. Inicie o projeto em modo desenvolvimento: `npm run dev`.
-
-### Documentação da API
-A API do StandPro está documentada com Swagger e pode ser acedida em `http://localhost:3001/api/docs` após iniciar o backend.
+### Passos
+1. **Clone:** `git clone https://github.com/smpsandro1239/stand-autom-vel-moderno.git`
+2. **Instalação:** `npm install`
+3. **Ambiente:** Configure o `.env` (veja `.env.example` se disponível ou use as definições padrão do docker).
+4. **Infraestrutura:** `docker-compose up -d`
+5. **Base de Dados:** `npm run prisma:generate -w backend && npm run prisma:deploy -w backend`
+6. **Start:** `npm run dev`
 
 ---
 
-## 🛡️ Auditoria e Logs
-O sistema mantém um registo rigoroso de todas as operações sensíveis. Administradores podem consultar os logs estruturados no backend para verificar quem criou, editou ou removeu qualquer recurso, garantindo transparência total.
+## 📚 Documentação Adicional
+
+Para mergulhos profundos na arquitetura e processos:
+- [🏗️ Arquitetura do Sistema](./docs/architecture.md)
+- [🚢 Guia de Deploy e Infraestrutura](./docs/deploy.md)
+- [🔰 Onboarding Técnico](./docs/onboarding.md)
+- [🔄 Fluxos de Dados](./docs/flows.md)
 
 ---
 
-*Desenvolvido com ❤️ pela equipa StandPro.*
+*Desenvolvido com excelência por Jules para StandPro. © 2024*
