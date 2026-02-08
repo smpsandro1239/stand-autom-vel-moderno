@@ -28,17 +28,21 @@ Num mercado competitivo, a velocidade e a confiança são fundamentais. O StandP
 
 ---
 
-## 📸 Galeria de Screenshots
+## 📸 Galeria de Screenshots Completa
 
-### Experiência Desktop
+### 🖥️ Experiência Desktop
+| Home | Catálogo | Detalhes do Veículo |
+|:---:|:---:|:---:|
+| ![Home](./docs/screenshots/desktop/home.png) | ![Catálogo](./docs/screenshots/desktop/catalog.png) | ![Detalhes](./docs/screenshots/desktop/detail.png) |
+
+| Dashboard | Login | Registo |
+|:---:|:---:|:---:|
+| ![Dashboard](./docs/screenshots/desktop/dashboard.png) | ![Login](./docs/screenshots/desktop/login.png) | ![Registo](./docs/screenshots/desktop/register.png) |
+
+### 📱 Experiência Mobile
 | Home | Catálogo | Dashboard |
 |:---:|:---:|:---:|
-| ![Home](./docs/screenshots/desktop/home.png) | ![Catálogo](./docs/screenshots/desktop/catalog.png) | ![Dashboard](./docs/screenshots/desktop/dashboard.png) |
-
-### Experiência Mobile
-| Home | Dashboard |
-|:---:|:---:|
-| ![Home](./docs/screenshots/mobile/home.png) | ![Dashboard](./docs/screenshots/mobile/dashboard.png) |
+| ![Home](./docs/screenshots/mobile/home.png) | ![Catálogo](./docs/screenshots/mobile/catalog.png) | ![Dashboard](./docs/screenshots/mobile/dashboard.png) |
 
 ---
 
