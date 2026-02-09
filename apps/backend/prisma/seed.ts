@@ -6,45 +6,44 @@ const prisma = new PrismaClient();
 async function main() {
   const password = await bcrypt.hash('password123', 10);
 
+  // Limpar dados existentes
+  // await prisma.lead.deleteMany();
+  // await prisma.rental.deleteMany();
+  // await prisma.vehicle.deleteMany();
+  // await prisma.session.deleteMany();
+  // await prisma.user.deleteMany();
+
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@stand.com' },
+    where: { email: 'admin@standpro.com' },
     update: {},
     create: {
-      email: 'admin@stand.com',
-      name: 'Admin Sandro',
+      email: 'admin@standpro.com',
+      name: 'Sandro Administrador',
       password,
       role: Role.ADMIN,
     },
   });
 
-  const user = await prisma.user.upsert({
-    where: { email: 'user@stand.com' },
-    update: {},
-    create: {
-      email: 'user@stand.com',
-      name: 'Joao Silva',
-      password,
-      role: Role.USER,
-    },
-  });
-
-  await prisma.vehicle.create({
-    data: {
-      make: 'Tesla',
-      model: 'Model 3',
-      year: 2023,
-      price: 45000,
-      mileage: 0,
-      fuelType: 'ELECTRIC',
-      transmission: 'AUTOMATIC',
-      description: 'Carro elétrico topo de gama.',
+  const vehicles = [
+    {
+      make: 'Porsche',
+      model: '911 Carrera S',
+      year: 2024,
+      price: 185000,
+      mileage: 1200,
+      fuelType: 'GASOLINE',
+      transmission: 'PDK',
+      description: 'Performance lendária num estado imaculado.',
+      images: ['https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=800'],
       createdById: admin.id,
-      images: ['https://example.com/tesla.jpg'],
-      isAvailable: true,
-    },
-  });
+    }
+  ];
 
-  console.log('Seed completed!');
+  for (const v of vehicles) {
+    await prisma.vehicle.create({ data: v });
+  }
+
+  console.log('Seed restored to Postgres format.');
 }
 
 main()
