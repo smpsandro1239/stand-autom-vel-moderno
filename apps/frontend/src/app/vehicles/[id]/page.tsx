@@ -2,57 +2,118 @@
 
 import { useVehicle } from '@/hooks/useVehicles';
 import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Input } from '@/components/ui/Input';
+import { useState } from 'react';
+import { sdk } from '@/lib/sdk';
 
 export default function VehicleDetailPage({ params }: { params: { id: string } }) {
-  const { data: vehicle, isLoading, isError } = useVehicle(params.id);
+  const { data: vehicle, isLoading } = useVehicle(params.id);
+  const [leadStatus, setLeadStatus] = useState<'idle' | 'sending' | 'success'>('idle');
 
-  if (isLoading) {
-    return (
-      <div className="container mx-auto p-8 text-center">
-        <p className="text-xl">A carregar detalhes do veículo...</p>
-      </div>
-    );
-  }
+  const handleLeadSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLeadStatus('sending');
+    const formData = new FormData(e.currentTarget);
 
-  if (isError || !vehicle) {
-    return (
-      <div className="container mx-auto p-8 text-center">
-        <p className="text-xl text-red-500">Erro ao carregar o veículo ou veículo não encontrado.</p>
-      </div>
-    );
-  }
+    try {
+      await sdk.leads.create({
+        name: formData.get('name') as string,
+        email: formData.get('email') as string,
+        message: `Interesse no veículo ${vehicle.make} ${vehicle.model}`,
+        vehicleId: vehicle.id,
+      });
+      setLeadStatus('success');
+    } catch (error) {
+      console.error(error);
+      setLeadStatus('idle');
+    }
+  };
+
+  if (isLoading) return <div className="max-w-7xl mx-auto px-4 py-20 text-center animate-pulse">Carregando detalhes...</div>;
+  if (!vehicle) return <div className="max-w-7xl mx-auto px-4 py-20 text-center">Veículo não encontrado.</div>;
 
   return (
-    <div className="container mx-auto p-8">
-      <div className="flex flex-col lg:flex-row gap-12">
-        <div className="lg:w-2/3">
-          <img
-            src={vehicle.imageUrl || 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&q=80&w=800'}
-            alt={`${vehicle.make} ${vehicle.model}`}
-            className="w-full rounded-lg shadow-lg object-cover max-h-[500px]"
-          />
-          <h1 className="text-4xl font-bold mt-8">{vehicle.make} {vehicle.model}</h1>
-          <p className="text-xl text-gray-600">{vehicle.year} • {vehicle.mileage} km</p>
-          <div className="mt-8">
-            <h2 className="text-2xl font-bold">Descrição</h2>
-            <p className="mt-4 text-gray-700 leading-relaxed">{vehicle.description}</p>
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        {/* Gallery & Info */}
+        <div className="lg:col-span-2 space-y-8">
+          <div className="aspect-video bg-gray-100 rounded-xl overflow-hidden shadow-inner">
+            <img
+              src={vehicle.images?.[0] || 'https://via.placeholder.com/1200x675?text=Destaque'}
+              alt={vehicle.model}
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          <div>
+            <div className="flex justify-between items-start mb-4">
+              <h1 className="text-4xl font-extrabold uppercase">{vehicle.make} {vehicle.model}</h1>
+              <span className="text-3xl font-bold text-blue-700">
+                {vehicle.price.toLocaleString('pt-PT', { style: 'currency', currency: 'EUR' })}
+              </span>
+            </div>
+
+            <div className="flex gap-6 text-gray-600 border-y py-4 mb-6">
+              <span>📅 {vehicle.year}</span>
+              <span>🛣️ {vehicle.mileage.toLocaleString()} km</span>
+              <span>⛽ Diesel</span>
+              <span>🕹️ Manual</span>
+            </div>
+
+            <h3 className="text-xl font-bold mb-3">Descrição</h3>
+            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+              {vehicle.description || 'Nenhuma descrição fornecida para este veículo.'}
+            </p>
           </div>
         </div>
-        <div className="lg:w-1/3">
-          <div className="border p-6 rounded-lg shadow-md bg-gray-50 sticky top-8">
-            <p className="text-3xl font-bold text-primary">{vehicle.price.toLocaleString()} €</p>
-            <div className="space-y-4 mt-6">
-              <Button className="w-full" size="lg">Contactar Vendedor</Button>
-              <Button className="w-full" variant="outline" size="lg">Agendar Test Drive</Button>
-            </div>
-            {vehicle.type === 'RENTAL' && (
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <p className="text-lg font-semibold mb-2">Preço por dia</p>
-                <p className="text-2xl font-bold text-green-600">{(vehicle.price / 30).toFixed(2)} € / dia</p>
-                <Button className="w-full mt-4" variant="primary" size="lg">Reservar Agora</Button>
+
+        {/* Action Sidebar */}
+        <div className="space-y-6">
+          <Card className="p-6">
+            {leadStatus === 'success' ? (
+              <div className="text-center py-8">
+                <div className="text-4xl mb-4">✅</div>
+                <h3 className="text-xl font-bold mb-2">Pedido Enviado!</h3>
+                <p className="text-gray-600">Um dos nossos consultores entrará em contacto em breve.</p>
+                <Button variant="link" onClick={() => setLeadStatus('idle')} className="mt-4">Enviar outro pedido</Button>
               </div>
+            ) : (
+              <>
+                <h3 className="text-xl font-bold mb-4">Tenho Interesse</h3>
+                <form onSubmit={handleLeadSubmit} className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium">Nome Completo</label>
+                    <Input name="name" required placeholder="Ex: João Silva" />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Email</label>
+                    <Input name="email" type="email" required placeholder="joao@email.com" />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Mensagem (Opcional)</label>
+                    <textarea
+                      className="w-full border rounded-md p-2 text-sm min-h-[100px]"
+                      placeholder="Gostaria de agendar um test-drive..."
+                    ></textarea>
+                  </div>
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    disabled={leadStatus === 'sending'}
+                  >
+                    {leadStatus === 'sending' ? 'A enviar...' : 'Solicitar Informações'}
+                  </Button>
+                </form>
+              </>
             )}
-          </div>
+          </Card>
+
+          <Card className="p-6 bg-blue-50 border-blue-100">
+            <h3 className="font-bold mb-2">Precisa de Ajuda?</h3>
+            <p className="text-sm text-gray-600 mb-4">Fale diretamente com um dos nossos especialistas via WhatsApp ou Telefone.</p>
+            <Button variant="outline" className="w-full bg-white">📞 800 123 456</Button>
+          </Card>
         </div>
       </div>
     </div>

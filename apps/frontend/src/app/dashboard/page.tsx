@@ -1,98 +1,138 @@
 'use client';
 
-import { useAuth } from '@/hooks/useAuth';
-import { useUserVehicles } from '@/hooks/useVehicles';
-import { Card, CardContent } from '@/components/ui/Card';
+import { useState } from 'react';
+import { useVehicles } from '@/hooks/useVehicles';
+import { useLeads, useRentals } from '@/hooks/useBusiness';
+import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { PlusCircle, Car, MessageSquare, Calendar } from 'lucide-react';
 
 export default function DashboardPage() {
-  const { user } = useAuth();
-  const { data: vehicles, isLoading } = useUserVehicles(user?.id);
+  const [activeTab, setActiveTab] = useState<'vehicles' | 'leads' | 'rentals'>('vehicles');
+
+  const { data: vehicles } = useVehicles();
+  const { data: leads } = useLeads();
+  const { data: rentals } = useRentals();
 
   return (
-    <div className="container mx-auto p-8">
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold">Dashboard</h1>
-          <p className="text-gray-600">Bem-vindo de volta, {user?.name}</p>
+    <div className="space-y-8">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold tracking-tight">Painel de Controlo</h1>
+        <div className="flex gap-2">
+          <Button size="sm">Adicionar Veículo</Button>
+          <Button size="sm" variant="outline">Exportar Relatórios</Button>
         </div>
-        <Button className="flex items-center gap-2">
-          <PlusCircle size={20} />
-          Adicionar Veículo
-        </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <Card>
-          <CardContent className="p-6 flex items-center gap-4">
-            <div className="p-3 bg-blue-100 text-blue-600 rounded-full">
-              <Car size={24} />
-            </div>
-            <div>
-              <p className="text-sm text-gray-600 font-medium">Meus Veículos</p>
-              <p className="text-2xl font-bold">{vehicles?.length || 0}</p>
-            </div>
-          </CardContent>
+      {/* Stats Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="p-6">
+          <p className="text-sm font-medium text-gray-500 uppercase">Total Veículos</p>
+          <p className="text-3xl font-bold">{vehicles?.length || 0}</p>
         </Card>
-
-        <Card>
-          <CardContent className="p-6 flex items-center gap-4">
-            <div className="p-3 bg-green-100 text-green-600 rounded-full">
-              <MessageSquare size={24} />
-            </div>
-            <div>
-              <p className="text-sm text-gray-600 font-medium">Leads Ativas</p>
-              <p className="text-2xl font-bold">0</p>
-            </div>
-          </CardContent>
+        <Card className="p-6 border-l-4 border-blue-500">
+          <p className="text-sm font-medium text-gray-500 uppercase">Leads Pendentes</p>
+          <p className="text-3xl font-bold text-blue-600">{leads?.length || 0}</p>
         </Card>
-
-        <Card>
-          <CardContent className="p-6 flex items-center gap-4">
-            <div className="p-3 bg-purple-100 text-purple-600 rounded-full">
-              <Calendar size={24} />
-            </div>
-            <div>
-              <p className="text-sm text-gray-600 font-medium">Alugueres Ativos</p>
-              <p className="text-2xl font-bold">0</p>
-            </div>
-          </CardContent>
+        <Card className="p-6 border-l-4 border-green-500">
+          <p className="text-sm font-medium text-gray-500 uppercase">Alugueres Ativos</p>
+          <p className="text-3xl font-bold text-green-600">{rentals?.length || 0}</p>
         </Card>
       </div>
 
-      <h2 className="text-2xl font-bold mb-6">A Minha Garagem</h2>
+      {/* Tabs */}
+      <div className="border-b">
+        <nav className="flex gap-8">
+          <button
+            onClick={() => setActiveTab('vehicles')}
+            className={`pb-4 text-sm font-medium ${activeTab === 'vehicles' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500'}`}
+          >
+            Garagem
+          </button>
+          <button
+            onClick={() => setActiveTab('leads')}
+            className={`pb-4 text-sm font-medium ${activeTab === 'leads' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500'}`}
+          >
+            Leads (CRM)
+          </button>
+          <button
+            onClick={() => setActiveTab('rentals')}
+            className={`pb-4 text-sm font-medium ${activeTab === 'rentals' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500'}`}
+          >
+            Reservas
+          </button>
+        </nav>
+      </div>
 
-      {isLoading ? (
-        <p>A carregar veículos...</p>
-      ) : vehicles?.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {vehicles.map((vehicle: any) => (
-            <Card key={vehicle.id}>
-              <CardContent className="p-0">
-                <img
-                  src={vehicle.imageUrl || 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&q=80&w=800'}
-                  alt={vehicle.model}
-                  className="w-full h-48 object-cover rounded-t-lg"
-                />
-                <div className="p-4">
-                  <h3 className="font-bold text-lg">{vehicle.make} {vehicle.model}</h3>
-                  <p className="text-gray-600 text-sm">{vehicle.year} • {vehicle.mileage} km</p>
-                  <div className="flex justify-between items-center mt-4">
-                    <span className="font-bold text-primary">{vehicle.price.toLocaleString()} €</span>
-                    <span className="px-2 py-1 bg-gray-100 text-xs rounded uppercase font-bold">{vehicle.status}</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      ) : (
-        <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed">
-          <p className="text-gray-500">Ainda não tem veículos listados.</p>
-          <Button variant="outline" className="mt-4">Listar o meu primeiro veículo</Button>
-        </div>
-      )}
+      {/* Content */}
+      <div className="bg-white rounded-lg border shadow-sm overflow-hidden">
+        {activeTab === 'vehicles' && (
+          <table className="w-full text-left">
+            <thead className="bg-gray-50 text-xs font-semibold text-gray-500 uppercase">
+              <tr>
+                <th className="px-6 py-4">Veículo</th>
+                <th className="px-6 py-4">Tipo</th>
+                <th className="px-6 py-4">Preço</th>
+                <th className="px-6 py-4 text-right">Ações</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              {vehicles?.map((v: any) => (
+                <tr key={v.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4">
+                    <p className="font-bold">{v.make} {v.model}</p>
+                    <p className="text-sm text-gray-500">{v.year} • {v.mileage}km</p>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className={`text-xs px-2 py-1 rounded-full font-bold ${v.type === 'SALE' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'}`}>
+                      {v.type}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 font-medium">
+                    {v.price.toLocaleString('pt-PT', { style: 'currency', currency: 'EUR' })}
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <Button variant="link" size="sm">Editar</Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+
+        {activeTab === 'leads' && (
+          <table className="w-full text-left">
+            <thead className="bg-gray-50 text-xs font-semibold text-gray-500 uppercase">
+              <tr>
+                <th className="px-6 py-4">Cliente</th>
+                <th className="px-6 py-4">Veículo de Interesse</th>
+                <th className="px-6 py-4">Data</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              {leads?.map((l: any) => (
+                <tr key={l.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4">
+                    <p className="font-bold">{l.name}</p>
+                    <p className="text-sm text-gray-500">{l.email}</p>
+                  </td>
+                  <td className="px-6 py-4">
+                    {l.vehicle?.make} {l.vehicle?.model}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-500">
+                    {new Date().toLocaleDateString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+
+        {activeTab === 'rentals' && (
+          <div className="p-12 text-center text-gray-500">
+            Nenhuma reserva ativa no momento.
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -3,3 +3,8 @@ dist
 .next
 .env
 *.log
+node_modules/
+dist/
+.next/
+*.log
+.env

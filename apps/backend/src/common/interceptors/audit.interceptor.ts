@@ -1,25 +1,27 @@
-import {
-  Injectable,
-  NestInterceptor,
-  ExecutionContext,
-  CallHandler,
-  Logger,
-} from '@nestjs/common';
+import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { StructuredLogger } from '../logger/logger.service';
 
 @Injectable()
 export class AuditInterceptor implements NestInterceptor {
-  private readonly logger = new Logger('Auditoria');
+  private logger = new StructuredLogger();
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
-    const { method, url, user } = request;
-    const userId = user?.sub || 'anonymous';
+    const { method, url, body, user } = request;
 
     return next.handle().pipe(
-      tap(() => {
-        this.logger.log(`User ${userId} performed ${method} on ${url}`);
+      tap((data) => {
+        this.logger.log({
+          type: 'AUDIT',
+          method,
+          url,
+          userId: user?.id || 'anonymous',
+          payload: body,
+          response: 'SUCCESS',
+          timestamp: new Date().toISOString(),
+        });
       }),
     );
   }

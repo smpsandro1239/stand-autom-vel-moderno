@@ -1,38 +1,36 @@
-import { Controller, Post, Body, UseGuards, Request, Get } from '@nestjs/common';
+import { Controller, Post, Body, UsePipes, HttpCode, HttpStatus } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
-import { LoginDto, RegisterDto } from '@stand/shared';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { RefreshTokenGuard } from './guards/refresh-token.guard';
+import { LoginDto, loginSchema, RegisterDto, registerSchema } from '@stand/shared';
+import { ZodValidationPipe } from '../common/pipes/zod-validation.pipe';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  async login(@Body() loginDto: LoginDto) {
-    const user = await this.authService.validateUser(loginDto.email, loginDto.password);
-    if (!user) {
-      return { message: 'Invalid credentials' };
-    }
-    return this.authService.login(user);
+  @HttpCode(HttpStatus.OK)
+  @UsePipes(new ZodValidationPipe(loginSchema))
+  @ApiOperation({ summary: 'Autenticar utilizador' })
+  @ApiResponse({ status: 200, description: 'Login bem-sucedido' })
+  @ApiResponse({ status: 401, description: 'Credenciais inválidas' })
+  login(@Body() loginDto: LoginDto) {
+    return this.authService.login(loginDto);
   }
 
   @Post('register')
-  async register(@Body() registerDto: RegisterDto) {
+  @UsePipes(new ZodValidationPipe(registerSchema))
+  @ApiOperation({ summary: 'Registar novo utilizador' })
+  @ApiResponse({ status: 201, description: 'Utilizador registado com sucesso' })
+  register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Post('logout')
-  async logout(@Request() req: any, @Body('refreshToken') refreshToken: string) {
-    return this.authService.logout(req.user.userId, refreshToken);
-  }
-
-  @UseGuards(RefreshTokenGuard)
   @Post('refresh')
-  async refresh(@Request() req: any) {
-    const userId = req.user.sub;
-    const refreshToken = req.user.refreshToken;
-    return this.authService.refreshTokens(userId, refreshToken);
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Renovar tokens' })
+  refresh(@Body('refreshToken') refreshToken: string) {
+    return this.authService.refreshTokens(refreshToken);
   }
 }
