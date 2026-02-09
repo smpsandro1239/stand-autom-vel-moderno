@@ -149,5 +149,5 @@ A API responde com códigos HTTP semânticos e mensagens claras em formato JSON.
 ## 📄 Conclusão
 O projeto apresenta uma base sólida e profissional a nível de backend e infraestrutura. No entanto, o frontend necessita de uma fase de desenvolvimento focada em integração e funcionalidade para atingir o estado de MVP produtivo.
 
-**Auditado por:** Jules (AI Senior Engineer)
+**Auditado por:** Sandro Pereira
 **Data:** Mon Feb  9 00:15:46 UTC 2026
