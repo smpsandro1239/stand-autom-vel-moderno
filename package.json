@@ -10,5 +10,9 @@
     "web:dev": "npm run dev -w apps/web",
     "build": "npm run build --workspaces",
     "test": "npm run test --workspaces"
+  },
+  "dependencies": {
+    "playwright": "^1.58.2",
+    "reflect-metadata": "^0.2.2"
   }
 }

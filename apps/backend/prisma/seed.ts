@@ -39,6 +39,7 @@ async function main() {
       transmission: 'AUTOMATIC',
       description: 'Carro elétrico topo de gama.',
       createdById: admin.id,
+      images: ['https://example.com/tesla.jpg'],
       isAvailable: true,
     },
   });
