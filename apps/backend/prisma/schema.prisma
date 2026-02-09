@@ -14,17 +14,17 @@ enum Role {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
+  id        String    @id @default(uuid())
+  email     String    @unique
   password  String
   name      String?
-  role      Role     @default(USER)
+  role      Role      @default(USER)
   sessions  Session[]
   vehicles  Vehicle[] @relation("CreatedBy")
   rentals   Rental[]
   leads     Lead[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Session {
