@@ -19,15 +19,15 @@ async function main() {
 
   const vehicles = [
     {
-      make: 'Porsche',
-      model: '911 GT3 RS',
+      make: 'Ferrari',
+      model: 'SF90 Stradale',
       year: 2024,
-      price: 268500,
-      mileage: 450,
-      fuelType: 'GASOLINA',
-      transmission: 'PDK',
-      description: 'A joia da coroa da Porsche.',
-      images: ['https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=1200'],
+      price: 525000,
+      mileage: 0,
+      fuelType: 'HYBRID',
+      transmission: 'DUAL-CLUTCH',
+      description: 'O auge da engenharia de Maranello.',
+      images: ['https://images.unsplash.com/photo-1592198084033-aade902d1aae?auto=format&fit=crop&q=80&w=1200'],
       createdById: admin.id,
     }
   ];
@@ -36,7 +36,7 @@ async function main() {
     await prisma.vehicle.create({ data: v });
   }
 
-  console.log('Seed Restored!');
+  console.log('Seed Restored for Production!');
 }
 
 main()
