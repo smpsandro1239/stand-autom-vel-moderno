@@ -6,35 +6,30 @@ const prisma = new PrismaClient();
 async function main() {
   const password = await bcrypt.hash('password123', 10);
 
-  // Limpar dados existentes
-  // await prisma.lead.deleteMany();
-  // await prisma.rental.deleteMany();
-  // await prisma.vehicle.deleteMany();
-  // await prisma.session.deleteMany();
-  // await prisma.user.deleteMany();
-
+  // Users
   const admin = await prisma.user.upsert({
     where: { email: 'admin@standpro.com' },
     update: {},
     create: {
       email: 'admin@standpro.com',
-      name: 'Sandro Administrador',
+      name: 'Administrador StandPro',
       password,
       role: Role.ADMIN,
     },
   });
 
+  // Veículos Premium
   const vehicles = [
     {
       make: 'Porsche',
-      model: '911 Carrera S',
+      model: '911 GT3 RS',
       year: 2024,
-      price: 185000,
-      mileage: 1200,
-      fuelType: 'GASOLINE',
+      price: 245000,
+      mileage: 150,
+      fuelType: 'GASOLINA',
       transmission: 'PDK',
-      description: 'Performance lendária num estado imaculado.',
-      images: ['https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=800'],
+      description: 'Performance lendária.',
+      images: ['https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=1200'],
       createdById: admin.id,
     }
   ];
@@ -43,7 +38,7 @@ async function main() {
     await prisma.vehicle.create({ data: v });
   }
 
-  console.log('Seed restored to Postgres format.');
+  console.log('Seed completed!');
 }
 
 main()
