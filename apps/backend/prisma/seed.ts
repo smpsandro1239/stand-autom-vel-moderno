@@ -36,7 +36,7 @@ async function main() {
     await prisma.vehicle.create({ data: v });
   }
 
-  console.log('Seed Restored for Production!');
+  console.log('Seed Restored!');
 }
 
 main()
